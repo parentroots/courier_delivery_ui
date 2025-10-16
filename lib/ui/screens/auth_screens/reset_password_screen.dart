@@ -10,8 +10,8 @@ class ResetPasswordScreen extends StatefulWidget {
   State<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
 }
 
-bool isShowPassword=false;
-bool isShowConfirmPassword=false;
+bool isShowPassword = false;
+bool isShowConfirmPassword = false;
 
 class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   @override
@@ -43,68 +43,80 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                         style: Theme.of(context).textTheme.titleSmall,
                       ),
                     ),
-          
-                    SizedBox(height: 30,),
-          
+
+                    SizedBox(height: 30),
+
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Text("New Password",style:Theme.of(context).textTheme.titleMedium),
+                        Text(
+                          "New Password",
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
                       ],
                     ),
-                    SizedBox(height: 4,),
+                    SizedBox(height: 4),
                     TextFormField(
                       obscureText: isShowPassword,
                       decoration: InputDecoration(
                         hintText: "Enter New Password",
-                        suffixIcon:IconButton(onPressed: (){
-                          isShowPassword=!isShowPassword;
-                          setState(() {
-                          });
-          
-                        },icon: Icon(
-                          isShowPassword
-                              ? Icons.visibility_off
-                              : Icons.remove_red_eye,
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            isShowPassword = !isShowPassword;
+                            setState(() {});
+                          },
+                          icon: Icon(
+                            isShowPassword
+                                ? Icons.visibility_off
+                                : Icons.remove_red_eye,
+                          ),
                         ),
                       ),
                     ),
-                    ),
-          
-                    SizedBox(height: 5,),
+
+                    SizedBox(height: 5),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Text("Confirm New Password",style:Theme.of(context).textTheme.titleMedium),
+                        Text(
+                          "Confirm New Password",
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
                       ],
                     ),
-                    SizedBox(height: 5,),
-          
+                    SizedBox(height: 5),
+
                     TextFormField(
                       obscureText: isShowConfirmPassword,
                       decoration: InputDecoration(
                         hintText: "R-Enter New Password",
-                        suffixIcon:IconButton(onPressed: (){
-                          isShowConfirmPassword=!isShowConfirmPassword;
-                          setState(() {
-                          });
-
-                        },icon: Icon(
-                          isShowConfirmPassword
-                              ? Icons.visibility_off
-                              : Icons.remove_red_eye,
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            isShowConfirmPassword = !isShowConfirmPassword;
+                            setState(() {});
+                          },
+                          icon: Icon(
+                            isShowConfirmPassword
+                                ? Icons.visibility_off
+                                : Icons.remove_red_eye,
+                          ),
                         ),
-                        )
                       ),
                     ),
-                    SizedBox(height: 40,),
-          
-                    ElevatedButton(onPressed: (){
-                      _showConfirmButton();
-          
-                    }, child: Text("Confirm",style: TextStyle(color: AppColors.whiteColor,
-                        fontSize: 24),))
+                    SizedBox(height: 40),
 
+                    ElevatedButton(
+                      onPressed: () {
+                        _showConfirmButton();
+                      },
+                      child: Text(
+                        "Confirm",
+                        style: TextStyle(
+                          color: AppColors.whiteColor,
+                          fontSize: 24,
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -115,54 +127,65 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     );
   }
 
-  void _showConfirmButton(){
-    showDialog(context: context, builder:(context){
-      return AlertDialog(
-        content: SizedBox(
-          height: 250,
-          width: double.maxFinite,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-
-              Container(
-                height: 70,
-                width: 70,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(100),
-                    border: Border.all(
-                      color: AppColors.themeColor,
-                      width: 5,
-                    )
+  void _showConfirmButton() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          content: SizedBox(
+            height: 250,
+            width: double.maxFinite,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  height: 70,
+                  width: 70,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(100),
+                    border: Border.all(color: AppColors.themeColor, width: 5),
+                  ),
+                  child: Icon(
+                    size: 60,
+                    Icons.check,
+                    color: AppColors.themeColor,
+                  ),
                 ),
-                child: Icon(
-                  size:60,
-                  Icons.check,color: AppColors.themeColor,),
-              ),
-              SizedBox(height: 5,),
-              Text("Change Password",style: Theme.of(context).textTheme.titleLarge,),
-              SizedBox(height: 10,),
-              Text(textAlign: TextAlign.center,
-                "our can now use your new password to login to your account.",style: Theme.of(context).textTheme.titleSmall,),
+                SizedBox(height: 5),
+                Text(
+                  "Change Password",
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                SizedBox(height: 10),
+                Text(
+                  textAlign: TextAlign.center,
+                  "our can now use your new password to login to your account.",
+                  style: Theme.of(context).textTheme.titleSmall,
+                ),
 
-              SizedBox(height: 10,),
+                SizedBox(height: 10),
 
-              ElevatedButton(onPressed: (){
-                _goToLoginButton();
-              }, child: Text("Go To LogIn",style: TextStyle(
-                color: Colors.white,
-                fontSize: 24
-              ),))
-
-            ],
+                ElevatedButton(
+                  onPressed: () {
+                    _goToLoginButton();
+                  },
+                  child: Text(
+                    "Go To LogIn",
+                    style: TextStyle(color: Colors.white, fontSize: 24),
+                  ),
+                ),
+              ],
+            ),
           ),
-        )
-      );
-    });
-  }
-  
-  void _goToLoginButton(){
-    Navigator.push(context, MaterialPageRoute(builder: (context)=>SignInScreen()));
+        );
+      },
+    );
   }
 
+  void _goToLoginButton() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => SignInScreen()),
+    );
+  }
 }
