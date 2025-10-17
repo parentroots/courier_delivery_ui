@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:foodi_go/data/controller/auth_controller.dart';
+import 'package:foodi_go/ui/screens/auth_screens/sign_in_screen.dart';
+import 'package:foodi_go/ui/screens/bottom_nav_screen/main_bottom_nav_screen.dart';
 import 'package:foodi_go/ui/screens/well_come_screen.dart';
 import 'package:foodi_go/ui/widget/splash_screen_widget.dart';
 import 'package:foodi_go/utilities/app_colors.dart';
@@ -18,11 +21,15 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     gotToNextScreen();
   }
-  
+
+
+
   Future<void>gotToNextScreen()async{
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(Duration(seconds: 4));
+    bool isLoggedIn=await AuthController.checkAuthState();
+
     if(mounted){
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>WellComeScreen()));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>isLoggedIn?MainBottomNavScreen():WellComeScreen()));
     }
   }
   
@@ -42,7 +49,9 @@ class _SplashScreenState extends State<SplashScreen> {
                   color: AppColors.whiteColor,
                   borderRadius: BorderRadius.circular(100),
                 ),
-                child: SvgPicture.asset(AssetsPath.logoSvg),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(100),
+                    child: SvgPicture.asset(AssetsPath.appLogoSvg)),
 
               )
             ],

@@ -1,8 +1,15 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:foodi_go/data/models/network_response.dart';
+import 'package:foodi_go/data/networkcaller/network_caller.dart';
 import 'package:foodi_go/ui/screens/auth_screens/forgot_password_screen.dart';
 import 'package:foodi_go/ui/screens/auth_screens/sign_up_screen.dart';
+import 'package:foodi_go/ui/screens/bottom_nav_screen/main_bottom_nav_screen.dart';
+import 'package:foodi_go/ui/widget/snackbar.dart';
 import 'package:foodi_go/utilities/app_colors.dart';
+
+import '../../../appconstant/app_const.dart';
+import '../../../data/controller/auth_controller.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -12,13 +19,20 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
+  final TextEditingController _emailTEController = TextEditingController();
+  final TextEditingController _passwordTEController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  bool isLoggedInUserIsProgress = false;
   bool isShowPassword = false;
 
   @override
- Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
         child: Form(
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          key: _formKey,
           child: Column(
             children: [
               SizedBox(height: 120),
@@ -56,6 +70,17 @@ class _SignInScreenState extends State<SignInScreen> {
                     ),
 
                     TextFormField(
+                      validator: (String? value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return "Enter your email";
+                        } else if (AppConstant.emailRegExp.hasMatch(value) ==
+                            false) {
+                          return "enter a valid email";
+                        }
+                        return null;
+                      },
+                      keyboardType: TextInputType.emailAddress,
+                      controller: _emailTEController,
                       decoration: InputDecoration(
                         hintText: "Enter your email address or phone",
                       ),
@@ -68,6 +93,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     ),
 
                     TextFormField(
+                      controller: _passwordTEController,
                       obscureText: isShowPassword,
                       decoration: InputDecoration(
                         hintText: "Enter Password",
@@ -91,7 +117,13 @@ class _SignInScreenState extends State<SignInScreen> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         GestureDetector(
-                          onTap: () {Navigator.push(context, MaterialPageRoute(builder: (context)=>ForgotPasswordScreen()));
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ForgotPasswordScreen(),
+                              ),
+                            );
                           },
                           child: Text(
                             textAlign: TextAlign.right,
@@ -107,13 +139,19 @@ class _SignInScreenState extends State<SignInScreen> {
                     SizedBox(height: 40),
 
                     Center(
-                      child: ElevatedButton(
-                        onPressed: () {},
-                        child: Text(
-                          "Log-In",
-                          style: TextStyle(
-                            color: AppColors.whiteColor,
-                            fontSize: 24,
+                      child: Visibility(
+                        visible: isLoggedInUserIsProgress == false,
+                        replacement: Center(child: CircularProgressIndicator()),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            _onTapLoginButton();
+                          },
+                          child: Text(
+                            "Log-In",
+                            style: TextStyle(
+                              color: AppColors.whiteColor,
+                              fontSize: 24,
+                            ),
                           ),
                         ),
                       ),
@@ -191,7 +229,66 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 
+  void _onTapLoginButton() async {
+    if (_formKey.currentState!.validate()) {
+      if (mounted) {
+        setState(() {
+          isLoggedInUserIsProgress = true;
+        });
+      }
+
+      String url = "https://task.teamrabbil.com/api/v1/login";
+
+      Map<String, dynamic> loginData = {
+        "email": _emailTEController.text.trim(),
+        "password": _passwordTEController.text,
+      };
+
+      NetworkResponse response = await NetworkCaller.postRequest(
+        url,
+        loginData,
+      );
+
+      if (mounted) {
+        setState(() {
+          isLoggedInUserIsProgress = false;
+        });
+      }
+
+
+      if (response.statusCode == 200) {
+        String token = response.responseData['token'];
+
+        await AuthController.saveUserAccessToken(token);
+
+        _emailTEController.clear();
+        _passwordTEController.clear();
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => MainBottomNavScreen()),
+        );
+        snackBar(context, "Logged-In Successfully");
+      } else {
+        snackBar(context, "email/password Invalid");
+      }
+    }
+  }
+
   void _onTapCreateAccountText() {
-    Navigator.push(context, MaterialPageRoute(builder:(context)=>SignUpScreen()));
+    if (mounted) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => SignUpScreen()),
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _emailTEController.dispose();
+    _passwordTEController.dispose();
   }
 }

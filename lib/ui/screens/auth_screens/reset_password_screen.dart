@@ -107,7 +107,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
                     ElevatedButton(
                       onPressed: () {
-                        _showConfirmButton();
+                        _showConfirmDialog();
                       },
                       child: Text(
                         "Confirm",
@@ -127,7 +127,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     );
   }
 
-  void _showConfirmButton() {
+  void _showConfirmDialog() {
     showDialog(
       context: context,
       builder: (context) {
@@ -139,8 +139,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(
-                  height: 70,
-                  width: 70,
+                  height: 60,
+                  width: 60,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(100),
                     border: Border.all(color: AppColors.themeColor, width: 5),

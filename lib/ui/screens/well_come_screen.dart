@@ -15,6 +15,7 @@ class WellComeScreen extends StatefulWidget {
 class _WellComeScreenState extends State<WellComeScreen> {
   int _current = 0;
   CarouselController controller = CarouselController();
+  String selected = "SignIn";
 
   @override
   Widget build(BuildContext context) {
@@ -113,19 +114,56 @@ class _WellComeScreenState extends State<WellComeScreen> {
               }).toList(),
             ),
             const SizedBox(height: 50),
-            ElevatedButton(
-              onPressed: () {_onTapSignUpButton();},
+            ElevatedButton(  style: ElevatedButton.styleFrom(
+              backgroundColor: selected == "SignIn"
+                  ? AppColors.themeColor
+                  : AppColors.whiteColor,
+            ),
+              onPressed: () {
+
+              if(mounted) {
+                setState(() {
+                  selected = "SignIn";
+                });
+              }
+
+              _onTapSignInButton();
+              },
+
               child: Text(
-                "Sign Up",
-                style: TextStyle(color: Colors.white, fontSize: 24),
+                "Sign-In",
+                style: TextStyle(
+                  color: selected == "SignIn"
+                      ? AppColors.whiteColor
+                      : AppColors.blackColor,
+                  fontSize: 24,
+                ),
               ),
             ),
             const SizedBox(height: 30),
-            ElevatedButton(
-              onPressed: _onTapSignInButton,
+            ElevatedButton(  style: ElevatedButton.styleFrom(
+              backgroundColor: selected == "SignUp"
+                  ? AppColors.themeColor
+                  : AppColors.whiteColor,
+            ),
+              onPressed:() {
+
+              if(mounted) {
+                setState(() {
+                  selected = "SignUp";
+                });
+              }
+
+                _onTapSignUpButton();
+              },
               child: Text(
-                "Sign In",
-                style: TextStyle(color: Colors.white, fontSize: 24),
+                "Sign-Up",
+                style: TextStyle(
+                  color: selected == "SignUp"
+                      ? AppColors.whiteColor
+                      : AppColors.blackColor,
+                  fontSize: 24,
+                ),
               ),
             ),
 

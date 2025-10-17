@@ -14,19 +14,31 @@ class SignUpScreen extends StatefulWidget {
   State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-TextEditingController nameTEController=TextEditingController();
-TextEditingController emailTEController=TextEditingController();
-TextEditingController mobileTEController=TextEditingController();
-TextEditingController passwordTEController=TextEditingController();
-TextEditingController confirmPasswordTEController=TextEditingController();
-
-GlobalKey<FormState>_formKey=GlobalKey<FormState>();
-
-String selected = "User";
-
-bool isUserCreateInProgress=false;
 
 class _SignUpScreenState extends State<SignUpScreen> {
+
+  final TextEditingController nameTEController = TextEditingController();
+  final TextEditingController emailTEController = TextEditingController();
+  final TextEditingController mobileTEController = TextEditingController();
+  final TextEditingController passwordTEController = TextEditingController();
+  final TextEditingController confirmPasswordTEController = TextEditingController();
+
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  String selected = "User";
+  bool isUserCreateInProgress = false;
+
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    nameTEController.dispose();
+    emailTEController.dispose();
+    mobileTEController.dispose();
+    passwordTEController.dispose();
+    confirmPasswordTEController.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -310,13 +322,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   void _createUser()async{
-
-    setState(() {
-      isUserCreateInProgress=true;
-    });
     if(_formKey.currentState!.validate()){
 
-    String url="https://task.teamrabbil.com/api/v1/registration";
+
+      if(mounted) {
+        setState(() {
+          isUserCreateInProgress = true;
+        });
+      }
+
+      String url="https://task.teamrabbil.com/api/v1/registration";
 
     Map<String,dynamic>userData={
         "email":emailTEController.text,
@@ -327,9 +342,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
         "photo":""
     };
     NetworkResponse response =await NetworkCaller.postRequest(url,userData);
-    setState(() {
-      isUserCreateInProgress = false;
-    });
+
+    if(mounted) {
+      setState(() {
+        isUserCreateInProgress = false;
+      });
+    }
 
     if(response.statusCode==200){
       nameTEController.clear();
@@ -348,14 +366,4 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   }
 
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-    nameTEController.dispose();
-    emailTEController.dispose();
-    mobileTEController.dispose();
-    passwordTEController.dispose();
-    confirmPasswordTEController;
-  }
 }
